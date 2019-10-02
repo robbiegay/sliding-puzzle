@@ -3,7 +3,7 @@
 // GLOBAL VARIABLES
 let app = document.getElementById('app');
 let puzzleBoard = renderElement('div', 'row')
-let tilePos = [];
+let boardPos = [];
 // let winCond = [0, 1, 2, 'X', 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
 
 // Function to render elements
@@ -57,11 +57,11 @@ function loadPuzzle() {
     app.appendChild(container);
 
     // Sets the 'X' square
-    tilePos[3].idx = 'X';
+    // boardPos[3].idx = 'X';
     // document.getElementById('3').id = 'X';
     document.getElementById('3').setAttribute('class', 'col-3 bg-dark display-1 border');
     document.getElementById('3').innerHTML = 'X';
-    console.log(tilePos);
+    console.log(boardPos);
 }
 
 
@@ -83,39 +83,51 @@ function buildBoard(size) {
         tile.innerHTML = `${tileObj.idx}`;
         tile.addEventListener('click', moveTile);
         puzzleBoard.appendChild(tile);
-        tilePos.push(tileObj);
+        boardPos.push(tileObj);
     }
 }
 
 function moveTile(e) {
-    let tileNum = tilePos[e.target.id].pos;
-    let emptyTile = tilePos[3].pos;
-    console.log(`Tile Num: ${tileNum}`);
-    console.log(`Empty Tile: ${emptyTile}`);
+    let tileNumPos = boardPos[e.target.id].pos;
+    // let tileNumIdx = boardPos[e.target.id].idx;
+    let emptyTile = boardPos[3].pos;
+    // console.log(`Tile Num: ${tileNumPos}`);
+    // console.log(`Empty Tile: ${emptyTile}`);
+    // console.log(tileNumIdx);
 
     // Checks if the clicked tile is next to the empty tile
-    if (tileNum === emptyTile - 1 || tileNum === emptyTile + 1 || tileNum === emptyTile - 4 || tileNum === emptyTile + 4) {
+    if (tileNumPos === emptyTile - 1 ||
+        tileNumPos === emptyTile + 1 ||
+        tileNumPos === emptyTile - 4 ||
+        tileNumPos === emptyTile + 4
+    ) {
         // Moves the clicked tile
-        tilePos[e.target.id].pos = emptyTile;
+        // console.log('etargetid',e.target.id)
+        boardPos[e.target.id].pos = emptyTile;
         // Moves 'X'
-        tilePos[3].pos = tileNum;
-        console.log(`Tile Num: ${tileNum}`);
-        console.log(`Empty Tile: ${emptyTile}`);
-        console.log(tilePos);
+        boardPos[3].pos = tileNumPos;
+        // console.log(`Tile Num: ${tileNumPos}`);
+        // console.log(`Empty Tile: ${emptyTile}`);
 
 
 
 
         // // Check win conditions
-        // if (String(tilePos) === String(winCond)) {
+        // if (String(boardPos) === String(winCond)) {
         //     alert('You win!!!!');
         // }
 
-        // // Redraws the board with new positions
-        // for (let i = 0; i < 15; i++) {
-        //     // tile.i.innerHTML = `test`;
-        //     document.getElementById(`${i}`).innerHTML = `${tilePos[i]}`;
+        // Redraws the board with new positions
+        // for (let i = 0; i < 16; i++) {
+            // tile.i.innerHTML = `test`;
+            document.getElementById(`${emptyTile}`).innerHTML = `${boardPos[e.target.id].idx}`;
+            document.getElementById(`${emptyTile}`).setAttribute('class', 'col-3 display-1 bg-danger border py-2');
         // }
+        document.getElementById(`${tileNumPos}`).setAttribute('class', 'col-3 bg-dark display-1 border');
+        document.getElementById(`${tileNumPos}`).innerHTML = 'X';
     }
+    // console.log(`Empty tile pos: ${boardPos[3].pos}`)
+    // console.log(boardPos);
+    console.log(boardPos[e.target.id]);
 
 }
