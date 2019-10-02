@@ -3,3 +3,11 @@
 html, body {
     height: 100%;
 }
+
+#testImg {
+    width: 50%;
+    background-image: url('w3css.gif');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: right;
+}

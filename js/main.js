@@ -43,23 +43,23 @@ function loadPuzzle() {
     // Add tiles to the puzzleBoard
     buildBoard(16);
 
-    
+
     centerCol.appendChild(puzzleBoard);
-    
+
     centerCol.appendChild(rand);
     centerCol.appendChild(upload);
-    
+
     centerCol.appendChild(bottom);
-    
+
     row.appendChild(rightCol);
     row.appendChild(centerCol);
     row.appendChild(leftCol);
-    
+
     container.appendChild(row);
-    
-    
+
+
     app.appendChild(container);
-    
+
     buildTiles(16);
 }
 
@@ -71,9 +71,8 @@ class Tile {
         this.position = position;
     }
     draw() {
-        // var el =  document.getElementById(`${this.position}`);
         document.getElementById(`${this.position}`).setAttribute('class', 'col-3 bg-danger display-1 border');
-        // el.innerHTML = 'test';
+
     }
     move() {
         alert('You told me to move!');
@@ -88,6 +87,7 @@ class EmptyTile extends Tile {
     }
 }
 
+// BUILD BOARD
 function buildBoard(size) {
     for (let i = 0; i < size; i++) {
         let tile = renderElement('div', 'col-3 bg-warning display-1 border');
@@ -98,6 +98,7 @@ function buildBoard(size) {
     }
 }
 
+// BUILD TILES
 function buildTiles(size) {
     for (let i = 0; i < size; i++) {
         let puzzlePiece = new Tile(50, i);
@@ -110,97 +111,47 @@ function buildTiles(size) {
 }
 
 function moveTile(e) {
-    // console.log(`You clicked on: ${e.target.id}`);
-    // console.log(`Empty Square Pos before func: ${emptyPos}`);
-    // Left, Right, Up, Down
+
+    // Checks if the clicked tile is next to the empty tile
     if (e.target.id === `${Number(emptyPos) - 1}` || e.target.id === `${Number(emptyPos) + 1}` || e.target.id === `${Number(emptyPos) - 4}` || e.target.id === `${Number(emptyPos) + 4}`) {
+
+
+
+        // Changes the previously dark tile to Not-Dark
+        document.getElementById(emptyPos).setAttribute('class', 'col-3 bg-danger display-1 border');
+        if (e.target.id === `${Number(emptyPos) - 1}`) {
+            tilePos.splice(emptyPos, 1, tilePos[(Number(emptyPos) - 1)]);
+            // e.target.innerHTML = `${e.target.id - 1}`;
+        }
+        if (e.target.id === `${Number(emptyPos) + 1}`) {
+            tilePos.splice(emptyPos, 1, tilePos[(Number(emptyPos) + 1)]);
+            // e.target.innerHTML = `${tilePos[(Number(emptyPos) + 1)]}`;
+        }
+        if (e.target.id === `${Number(emptyPos) - 4}`) {
+            tilePos.splice(emptyPos, 1, tilePos[(Number(emptyPos) - 4)]);
+        }
+        if (e.target.id === `${Number(emptyPos) + 4}`) {
+            tilePos.splice(emptyPos, 1, tilePos[(Number(emptyPos) + 4)]);
+        }
 
         // Changes the clicked tile to Dark
         e.target.setAttribute('class', 'col-3 bg-dark display-1 border');
         tilePos.splice(e.target.id, 1, 'X')
 
-        // Changes the previously dark tile to Not-Dark
-        document.getElementById(emptyPos).setAttribute('class', 'col-3 bg-danger display-1 border');
-        if (e.target.id === `${Number(emptyPos) - 1}`) {
-            tilePos.splice(emptyPos, 1, (Number(emptyPos) - 1));
-        }
-        if (e.target.id === `${Number(emptyPos) + 1}`) {
-            tilePos.splice(emptyPos, 1, (Number(emptyPos) + 1));
-        }
-        if (e.target.id === `${Number(emptyPos) - 4}`) {
-            tilePos.splice(emptyPos, 1, (Number(emptyPos) - 4));
-        }
-        if (e.target.id === `${Number(emptyPos) + 4}`) {
-            tilePos.splice(emptyPos, 1, (Number(emptyPos) + 4));
-        }
-
-        // Sets the new emptyPos to the new Dark tile
-        emptyPos = (e.target.id);
-        // console.log(`Empty Square Pos after func: ${emptyPos}`);
-        // console.log(`${Number(emptyPos) - 1}`);
-        // console.log(`${Number(emptyPos) + 1}`);
-        // console.log(`${Number(emptyPos) - 4}`);
-        // console.log(`${Number(emptyPos) + 4}`);
-        console.log(tilePos);
+        emptyPos = e.target.id;
+        console.log(`CurrentBd: ${String(tilePos)}`);
+        // console.log(`Win Condt: ${String(winCond)}`);
 
         // Check win conditions
         if (String(tilePos) === String(winCond)) {
             alert('You win!!!!');
         }
+
+        // Redraws the board with new positions
+        for (let i = 0; i < 15; i++) {
+            // tile.i.innerHTML = `test`;
+            document.getElementById(`${i}`).innerHTML = `${tilePos[i]}`;
+        }
     }
 
 }
-
-
-
-
-
-
-
-// switch (e.target.id) {
-//     case (`${Number(emptyPos) - 1}`):
-//         tilePos.splice(emptyPos, 1, Number(emptyPos - 1));
-//     case (`${Number(emptyPos) + 1}`):
-//         tilePos.splice(emptyPos, 1, Number(emptyPos + 1));
-//     case (`${Number(emptyPos) - 4}`):
-//         tilePos.splice(emptyPos, 1, Number(emptyPos - 4));
-//     case (`${Number(emptyPos) + 4}`):
-//         tilePos.splice(emptyPos, 1, Number(emptyPos + 4));
-// }
-
-
-
-
-
-// SMART LOGS
-// console.log(`Global Tile Array:`);
-// console.log(tileAr);
-
-
-
-
-// // BUILD TILE BOARD
-// function buildTiles(tileNum) {
-//     for (let i = 0; i < tileNum; i++) {
-//         let tileObj = new Tile(50);
-
-//         tileObj.id = `${i + 1}`;
-//         // Why give an object an innerHTML
-//         tileObj.innerHTML = `This is #${i + 1}`
-
-//         // HTML is a property of the tile object?
-//         tileObj.tileDiv = renderElement('div', 'col-3 bg-warning');
-
-//         tileObj.tileDiv.innerHTML = `This is #${i + 1}`
-//         tileObj.tileDiv.id = `${i + 1}`;
-//         // Click event not working, should it be something other than 'this'?
-//         tileObj.tileDiv.addEventListener('click', this.move);
-
-//         // Pushing the object to an array or else it stops existing
-//         tileAr.push(tileObj);
-
-//         // Appending a property of an object
-//         puzzleBoard.appendChild(tileObj.tileDiv);
-//     }
-// }
-
