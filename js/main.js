@@ -90,7 +90,10 @@ class EmptyTile extends Tile {
 // BUILD BOARD
 function buildBoard(size) {
     for (let i = 0; i < size; i++) {
+        // sets the color
         let tile = renderElement('div', 'col-3 bg-warning display-1 border');
+        tile.style.backgroundImage = "url('../img/vicky-zwelling-pottery.JPG')";
+        tile.style.backgroundPosition = `${i * 25}% ${i * 25}%`
         tile.id = `${i}`;
         tile.innerHTML = `${i}`;
         tile.addEventListener('click', moveTile);
