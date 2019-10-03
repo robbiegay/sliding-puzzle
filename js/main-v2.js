@@ -4,7 +4,7 @@
 let app = document.getElementById('app');
 let puzzleBoard = renderElement('div', 'row')
 let boardPos = [];
-// let winCond = [0, 1, 2, 'X', 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+let winCond = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
 
 // Function to render elements
 function renderElement(element, classes) {
@@ -113,19 +113,17 @@ function moveTile(e) {
         // Moves 'X'
         boardPos[3].pos = clickedTile;
 
-        for (let i = 0; i < 16; i++) {
+        let win = 0;
+        for (let i = 0; i < 16; i++) { 
             document.getElementById(`${boardPos[i].pos}`).innerHTML = `${i}`;
             document.getElementById(`${boardPos[i].pos}`).setAttribute('class', 'col-3 display-1 bg-danger border py-2');
+            if (boardPos[i].pos === boardPos[i].idx) {
+                win ++;
+            }
+            if (win === 16) {
+                alert('win');
+            }
         }
-
-
-        // document.getElementById(`${emptyTile}`).innerHTML = `${boardPos[e.target.id].pos}`;
-        // document.getElementById(`${emptyTile}`).setAttribute('class', 'col-3 display-1 bg-danger border py-2');
-
         document.getElementById(`${clickedTile}`).setAttribute('class', 'col-3 bg-dark display-1 border');
-        // document.getElementById(`${clickedTile}`).innerHTML = `${boardPos[3].idx}`;
     }
-    console.log(boardPos);
-    console.log(`Clicked Tile Name: ${boardPos[e.target.id].idx} Pos: ${boardPos[e.target.id].pos}`);
-    console.log(`Empty Tile Name: ${boardPos[3].idx} Pos: ${boardPos[3].pos}`);
 }
