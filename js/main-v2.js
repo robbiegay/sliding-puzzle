@@ -57,11 +57,11 @@ function loadPuzzle() {
     container.appendChild(row);
     app.appendChild(container);
 
-    document.getElementById('3').setAttribute('class', 'col-3 bg-dark display-1 border');
-    document.getElementById('3').innerHTML = 'X';
+    // document.getElementById('3').setAttribute('class', 'col-3 bg-dark display-1 border');
+    // document.getElementById('3').innerHTML = 'X';
     console.log(boardPos);
     // boardPos[0].draw();
-    addImg();
+    // addImg();
 }
 
 // OBJECTS
@@ -73,18 +73,19 @@ class TileObj {
         // this.img = '<img id="testImg" src="../img/vicky-zwelling-pottery.JPG"></img>';
 
     }
-    draw() {
-        <img src="../img/vicky-zwelling-pottery.JPG"></img>
-        overflow: hidden
-    }
+    // draw() {
+    //     <img src="../img/vicky-zwelling-pottery.JPG"></img>
+    //     overflow: hidden
+    // }
 }
 
-function addImg() {
-    for (let i = 0; i < 16; i++) {
-        boardPos[i].draw();
+// function addImg() {
+//     for (let i = 0; i < 16; i++) {
+//         boardPos[i].draw();
+//         400px picture, 100px, margin -100, margin -100;
 
-    }
-}
+//     }
+// }
 
 
 
@@ -93,11 +94,13 @@ function addImg() {
 function buildBoard(size) {
     for (let i = 0; i < size; i++) {
         let tileObj = new TileObj(50, i, i);
-        let tile = renderElement('div', 'col-3 display-1 bg-danger border py-2');
-        tile.style.overflow = 'hidden';
+        let tile = renderElement('div', 'display-1 bg-danger border p-0');
+        tile.style.height = '150px';
+        tile.style.width = '150px';
         // tile.setAttribute('src', '"../img/vicky-zwelling-pottery.JPG"');
         tile.id = `${tileObj.idx}`;
-        tile.innerHTML = `<img src="../img/vicky-zwelling-pottery.JPG"></img>`;
+        tile.innerHTML = `<img src="../img/vicky-zwelling-pottery.JPG" height="600" width="600"></img>`;
+        tile.style.overflow = 'hidden';
         // tile.innerHTML = `${tileObj.img}`;
         // tile.style.backgroundImage = 'url(../img/vicky-zwelling-pottery.JPG)';
         // tile.style.backgroundSize = '400%';
@@ -151,24 +154,4 @@ function moveTile(e) {
         }
         document.getElementById(`${clickedTile}`).setAttribute('class', 'col-3 bg-dark display-1 border');
     }
-}
-
-
-
-function testingImageCanvas(__index__) {
-    let canvas = document.getElementById(__index__)
-    canvas.width = 50;
-    canvas.height = 50;
-    let ctx = canvas.getContext("2d");
-    var image = new Image();
-    image.src = '../img/vicky-zwelling-pottery.JPG';
-
-    image.onload = () => {
-        ctx.drawImage(image, 500, 0, 500, 500, 0, 0, 500, 500);
-    };
-
-    let __img__ = document.createElement('img');
-    __img__.src = "../img/vicky-zwelling-pottery.JPG";
-    app.appendChild(__img__);
-
 }
