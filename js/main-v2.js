@@ -87,47 +87,45 @@ function buildBoard(size) {
     }
 }
 
+function find (location) {
+    for (let i = 0; i < 16; i++) {
+        if (boardPos[i].pos === Number(location)) {
+            return i;
+        }
+    }
+}
+
 function moveTile(e) {
-    let tileNumPos = boardPos[e.target.id].pos;
+    console.log(find(e.target.id));
+    let clickedTile = boardPos[find(e.target.id)].pos;
     // let tileNumIdx = boardPos[e.target.id].idx;
     let emptyTile = boardPos[3].pos;
-    // console.log(`Tile Num: ${tileNumPos}`);
-    // console.log(`Empty Tile: ${emptyTile}`);
-    // console.log(tileNumIdx);
-
+    console.log(`Clicked Tile Name: ${boardPos[e.target.id].idx} Pos: ${boardPos[e.target.id].pos}`);
+    console.log(`Empty Tile Name: ${boardPos[3].idx} Pos: ${boardPos[3].pos}`);
     // Checks if the clicked tile is next to the empty tile
-    if (tileNumPos === emptyTile - 1 ||
-        tileNumPos === emptyTile + 1 ||
-        tileNumPos === emptyTile - 4 ||
-        tileNumPos === emptyTile + 4
+    if (clickedTile === emptyTile - 1 ||
+        clickedTile === emptyTile + 1 ||
+        clickedTile === emptyTile - 4 ||
+        clickedTile === emptyTile + 4
     ) {
         // Moves the clicked tile
-        // console.log('etargetid',e.target.id)
-        boardPos[e.target.id].pos = emptyTile;
+        boardPos[find(e.target.id)].pos = emptyTile;
         // Moves 'X'
-        boardPos[3].pos = tileNumPos;
-        // console.log(`Tile Num: ${tileNumPos}`);
-        // console.log(`Empty Tile: ${emptyTile}`);
+        boardPos[3].pos = clickedTile;
+
+        for (let i = 0; i < 16; i++) {
+            document.getElementById(`${boardPos[i].pos}`).innerHTML = `${i}`;
+            document.getElementById(`${boardPos[i].pos}`).setAttribute('class', 'col-3 display-1 bg-danger border py-2');
+        }
 
 
+        // document.getElementById(`${emptyTile}`).innerHTML = `${boardPos[e.target.id].pos}`;
+        // document.getElementById(`${emptyTile}`).setAttribute('class', 'col-3 display-1 bg-danger border py-2');
 
-
-        // // Check win conditions
-        // if (String(boardPos) === String(winCond)) {
-        //     alert('You win!!!!');
-        // }
-
-        // Redraws the board with new positions
-        // for (let i = 0; i < 16; i++) {
-            // tile.i.innerHTML = `test`;
-            document.getElementById(`${emptyTile}`).innerHTML = `${boardPos[e.target.id].idx}`;
-            document.getElementById(`${emptyTile}`).setAttribute('class', 'col-3 display-1 bg-danger border py-2');
-        // }
-        document.getElementById(`${tileNumPos}`).setAttribute('class', 'col-3 bg-dark display-1 border');
-        document.getElementById(`${tileNumPos}`).innerHTML = 'X';
+        document.getElementById(`${clickedTile}`).setAttribute('class', 'col-3 bg-dark display-1 border');
+        // document.getElementById(`${clickedTile}`).innerHTML = `${boardPos[3].idx}`;
     }
-    // console.log(`Empty tile pos: ${boardPos[3].pos}`)
-    // console.log(boardPos);
-    console.log(boardPos[e.target.id]);
-
+    console.log(boardPos);
+    console.log(`Clicked Tile Name: ${boardPos[e.target.id].idx} Pos: ${boardPos[e.target.id].pos}`);
+    console.log(`Empty Tile Name: ${boardPos[3].idx} Pos: ${boardPos[3].pos}`);
 }
