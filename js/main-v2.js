@@ -56,21 +56,18 @@ function loadPuzzle() {
     container.appendChild(row);
     app.appendChild(container);
 
-    // Sets the 'X' square
-    // boardPos[3].idx = 'X';
-    // document.getElementById('3').id = 'X';
     document.getElementById('3').setAttribute('class', 'col-3 bg-dark display-1 border');
     document.getElementById('3').innerHTML = 'X';
     console.log(boardPos);
 }
 
-
 // OBJECTS
 class TileObj {
-    constructor(size, idx, pos) {
+    constructor(size, idx, pos, img) {
         this.size = size;
         this.idx = idx;
         this.pos = pos;
+        this.img = '<img id="testImg" src="../img/vicky-zwelling-pottery.JPG"></img>';
     }
 }
 
@@ -79,8 +76,14 @@ function buildBoard(size) {
     for (let i = 0; i < size; i++) {
         let tileObj = new TileObj(50, i, i);
         let tile = renderElement('div', 'col-3 display-1 bg-danger border py-2');
+        // tile.style.backgroundImage = 'url(../img/vicky-zwelling-pottery.JPG)';
+        // tile.style.backgroundSize = '400%';
+        // for (let j = 0; j < 4; j++) {
+        //     tile.style.backgroundPosition = `${(i + j)* 25}% ${i * 25}%`
+        // }
         tile.id = `${tileObj.idx}`;
-        tile.innerHTML = `${tileObj.idx}`;
+        tile.innerHTML = `${i}`;
+        // tile.innerHTML = `${tileObj.img}`;
         tile.addEventListener('click', moveTile);
         puzzleBoard.appendChild(tile);
         boardPos.push(tileObj);
@@ -103,8 +106,8 @@ function moveTile(e) {
     console.log(`Clicked Tile Name: ${boardPos[e.target.id].idx} Pos: ${boardPos[e.target.id].pos}`);
     console.log(`Empty Tile Name: ${boardPos[3].idx} Pos: ${boardPos[3].pos}`);
     // Checks if the clicked tile is next to the empty tile
-    if (clickedTile === emptyTile - 1 ||
-        clickedTile === emptyTile + 1 ||
+    if ((clickedTile === emptyTile - 1 && emptyTile % 4 !== 0) ||
+        (clickedTile === emptyTile + 1 && clickedTile % 4 !== 0) ||
         clickedTile === emptyTile - 4 ||
         clickedTile === emptyTile + 4
     ) {
