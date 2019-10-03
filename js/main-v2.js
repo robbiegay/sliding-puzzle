@@ -61,7 +61,7 @@ function loadPuzzle() {
     document.getElementById('3').innerHTML = 'X';
     console.log(boardPos);
     // boardPos[0].draw();
-    addImg(0, 0, 50, 50);
+    addImg();
 }
 
 // OBJECTS
@@ -73,25 +73,16 @@ class TileObj {
         // this.img = '<img id="testImg" src="../img/vicky-zwelling-pottery.JPG"></img>';
 
     }
-    draw(x, y, w, h) {
-        let canvas = document.getElementById(this.idx)
-        canvas.width = 50;
-        canvas.height = 50;
-        let ctx = canvas.getContext("2d");
-        var image = new Image(50, 50);
-        image.src = '../img/vicky-zwelling-pottery.JPG';
-        image.onload = () => {
-            ctx.drawImage(image, x, y, w, h);
-        };
-        image.style.display = 'block';
-        image.style.margin = 0;
-        image.style.padding = 0;
+    draw() {
+        <img src="../img/vicky-zwelling-pottery.JPG"></img>
+        overflow: hidden
     }
 }
 
-function addImg(x, y, w, h) {
+function addImg() {
     for (let i = 0; i < 16; i++) {
-        boardPos[i].draw(x, y, w, h);
+        boardPos[i].draw();
+
     }
 }
 
@@ -102,10 +93,11 @@ function addImg(x, y, w, h) {
 function buildBoard(size) {
     for (let i = 0; i < size; i++) {
         let tileObj = new TileObj(50, i, i);
-        let tile = renderElement('canvas', 'col-3 display-1 bg-danger border py-2');
+        let tile = renderElement('div', 'col-3 display-1 bg-danger border py-2');
+        tile.style.overflow = 'hidden';
         // tile.setAttribute('src', '"../img/vicky-zwelling-pottery.JPG"');
         tile.id = `${tileObj.idx}`;
-        // tile.innerHTML = `${i}`;
+        tile.innerHTML = `<img src="../img/vicky-zwelling-pottery.JPG"></img>`;
         // tile.innerHTML = `${tileObj.img}`;
         // tile.style.backgroundImage = 'url(../img/vicky-zwelling-pottery.JPG)';
         // tile.style.backgroundSize = '400%';
