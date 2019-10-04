@@ -109,7 +109,7 @@ function buildBoard(size) {
         // tile.setAttribute('src', '"../img/vicky-zwelling-pottery.JPG"');
         tile.id = `tile${tileObj.idx}`;
         // tile.innerHTML = `${i}`;
-        tile.innerHTML = `<img id="${i}" src="../img/vicky-zwelling-pottery.JPG" height="600" width="600"></img>`;
+        tile.innerHTML = `<img id="${i}" src="img/vicky-zwelling-pottery.JPG" height="600" width="600"></img>`;
         // tile.setAttribute('style', 'margin-left:-100px;');
         // img.setAttribute('style', 'left-margin: calc(-150px);');
         tile.style.overflow = 'hidden';
