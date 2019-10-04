@@ -62,6 +62,8 @@ function loadPuzzle() {
     console.log(boardPos);
     // boardPos[0].draw();
     // addImg();
+    updateImg();
+    document.getElementById('3').innerHTML = '';
 }
 
 // OBJECTS
@@ -98,9 +100,9 @@ function buildBoard(size) {
         tile.style.height = '150px';
         tile.style.width = '150px';
         // tile.setAttribute('src', '"../img/vicky-zwelling-pottery.JPG"');
-        tile.id = `${tileObj.idx}`;
+        tile.id = `tile${tileObj.idx}`;
         // tile.innerHTML = `${i}`;
-        tile.innerHTML = `<img id="img${i}" src="../img/vicky-zwelling-pottery.JPG" height="600" width="600"></img>`;
+        tile.innerHTML = `<img id="${i}" src="../img/vicky-zwelling-pottery.JPG" height="600" width="600"></img>`;
         // tile.setAttribute('style', 'margin-left:-100px;');
         // img.setAttribute('style', 'left-margin: calc(-150px);');
         tile.style.overflow = 'hidden';
@@ -111,7 +113,7 @@ function buildBoard(size) {
         //     tile.style.backgroundPosition = `${(i + j)* 25}% ${i * 25}%`
         // }
         // tile.background = "../img/vicky-zwelling-pottery.JPG";
-        tile.addEventListener('click', moveTile);
+        // tile.addEventListener('click', moveTile);
         puzzleBoard.appendChild(tile);
         boardPos.push(tileObj);
     }
@@ -145,8 +147,9 @@ function moveTile(e) {
 
         let win = 0;
         for (let i = 0; i < 16; i++) {
-            document.getElementById(`${boardPos[i].pos}`).innerHTML = `${i}`;
-            document.getElementById(`${boardPos[i].pos}`).setAttribute('class', 'col-3 display-1 bg-danger border py-2');
+            updateImgLive(boardPos[i].pos, i);
+            // document.getElementById(`${boardPos[i].pos}`).innerHTML = `${i}`;
+            // document.getElementById(`${boardPos[i].pos}`).setAttribute('class', 'col-3 display-1 bg-danger border py-2');
             if (boardPos[i].pos === boardPos[i].idx) {
                 win++;
             }
@@ -154,7 +157,7 @@ function moveTile(e) {
                 alert('win');
             }
         }
-        document.getElementById(`${clickedTile}`).setAttribute('class', 'col-3 bg-dark display-1 border');
+        // document.getElementById(`${clickedTile}`).setAttribute('class', 'col-3 bg-dark display-1 border');
     }
 }
 
@@ -173,15 +176,32 @@ function updateImg() {
         if (i % 4 === 0) {
             j += 1;
         }
-        let img = document.getElementById(`img${i}`);
+        let img = document.getElementById(`${i}`);
         img.setAttribute('style', `margin-left:-${150 * (i % 4)}px;margin-top:-${150 * j}px;`);
+        img.addEventListener('click', moveTile);
         // img.addEventListener('click', moveTile);
     }
 }
 
+// x = move from, pos = move to
+function updateImgLive(x, pos) {
+    let j = 0;
+    if (x < 4) {
+        j = 0;
+    } else if (x < 8) {
+        j = 1;
+    } else if (x < 12) {
+        j = 2;
+    } else {
+        j = 3;
+    }
+    let img = document.getElementById(`${pos}`);
+    img.setAttribute('style', `margin-left:-${150 * (x % 4)}px;margin-top:-${150 * j}px;`);
+}
 
 
-// updateImg();
+
+
 
 // let img0 = document.getElementById('img0');
 // img0.setAttribute('style', 'margin-left:-100px;');
