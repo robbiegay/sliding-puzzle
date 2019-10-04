@@ -63,7 +63,8 @@ function loadPuzzle() {
     // boardPos[0].draw();
     // addImg();
     updateImg();
-    document.getElementById('3').innerHTML = '';
+    // document.getElementById('3').innerHTML = '';
+    setDarkTile(3);
 }
 
 // OBJECTS
@@ -96,7 +97,7 @@ class TileObj {
 function buildBoard(size) {
     for (let i = 0; i < size; i++) {
         let tileObj = new TileObj(50, i, i);
-        let tile = renderElement('div', 'display-1 bg-danger border'); // col-3
+        let tile = renderElement('div', 'display-1 bg-dark border'); // col-3
         tile.style.height = '150px';
         tile.style.width = '150px';
         // tile.setAttribute('src', '"../img/vicky-zwelling-pottery.JPG"');
@@ -147,7 +148,8 @@ function moveTile(e) {
 
         let win = 0;
         for (let i = 0; i < 16; i++) {
-            updateImgLive(boardPos[i].pos, i);
+            // updateImgLive(boardPos[i].pos, i);
+            updateImgLive(i, boardPos[i].pos);
             // document.getElementById(`${boardPos[i].pos}`).innerHTML = `${i}`;
             // document.getElementById(`${boardPos[i].pos}`).setAttribute('class', 'col-3 display-1 bg-danger border py-2');
             if (boardPos[i].pos === boardPos[i].idx) {
@@ -157,6 +159,7 @@ function moveTile(e) {
                 alert('win');
             }
         }
+        setDarkTile(clickedTile);
         // document.getElementById(`${clickedTile}`).setAttribute('class', 'col-3 bg-dark display-1 border');
     }
 }
@@ -199,6 +202,11 @@ function updateImgLive(x, pos) {
     img.setAttribute('style', `margin-left:-${150 * (x % 4)}px;margin-top:-${150 * j}px;`);
 }
 
+function setDarkTile(x) {
+    let img = document.getElementById(`${x}`);
+    img.setAttribute('style', `opacity: 0;`);
+    // tile.innerHTML = '';
+}
 
 
 
