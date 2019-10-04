@@ -5,6 +5,7 @@ let app = document.getElementById('app');
 let puzzleBoard = renderElement('div', 'row')
 let boardPos = [];
 let winCond = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+let imgSrc = 'img/vicky-zwelling-pottery.JPG';
 
 // Function to render elements
 function renderElement(element, classes) {
@@ -15,7 +16,7 @@ function renderElement(element, classes) {
 
 function loadPuzzle() {
     // Create Elements
-    let container = renderElement('div', 'container-fluid');
+    let container = renderElement('div', 'container'); // fluid
     let row = renderElement('div', 'row');
 
     let leftCol = renderElement('div', 'col-0 col-sm-0 col-md-1 col-lg-2');
@@ -26,13 +27,20 @@ function loadPuzzle() {
     let title = renderElement('h1', 'my-5 display-4 text-white');
     title.innerHTML = 'Sliding Puzzle';
 
-    let rand = renderElement('button', 'col-6 button bg-primary');
+    let rand = renderElement('button', 'col-4 button bg-primary');
     rand.setAttribute('type', 'button');
+    rand.setAttribute('id', 'randID');
     rand.innerHTML = 'RANDOMIZE';
 
-    let upload = renderElement('button', 'col-6 button bg-primary');
-    upload.setAttribute('type', 'image');
+    let upload = renderElement('input', 'col-4 button bg-light');
+    upload.setAttribute('type', 'file');
+    upload.setAttribute('id', 'file');
     upload.innerHTML = 'UPLOAD';
+
+    let setImg = renderElement('button', 'col-4 button bg-primary');
+    setImg.setAttribute('type', 'button');
+    setImg.setAttribute('id', 'setImgID');
+    setImg.innerHTML = 'SET IMG';
 
     let bottom = renderElement('div', 'p-5');
 
@@ -47,6 +55,7 @@ function loadPuzzle() {
 
     centerCol.appendChild(rand);
     centerCol.appendChild(upload);
+    centerCol.appendChild(setImg);
 
     centerCol.appendChild(bottom);
 
@@ -66,7 +75,8 @@ function loadPuzzle() {
     // document.getElementById('3').innerHTML = '';
     setDarkTile(3);
     rand.addEventListener('click', randomize);
-    upload.addEventListener('click', upload);
+    setImg.addEventListener('click', uploadImg);
+    // upload.addEventListener('click', upload);
 }
 
 // OBJECTS
@@ -92,10 +102,23 @@ class TileObj {
 //     }
 // }
 
-let imgFileName = '';
-
-function upload() {
-    alert('upload here');
+// ADD IMG
+function uploadImg() {
+    // alert('hi');
+    let input = document.getElementById('file');
+    // console.log(input.files[0].name);
+    console.log(input.files);
+    if (input.files[0].name !== undefined) {
+        imgSrc = URL.createObjectURL(input.files[0]);
+        // imgSrc = input.files[0].name;
+        puzzleBoard.innerHTML = '';
+        boardPos = [];
+        buildBoard(16);
+        updateImg();
+        setDarkTile(3);
+        document.getElementById('randID').addEventListener('click', randomize);
+        document.getElementById('setImgID').addEventListener('click', uploadImg);
+    }
 }
 
 
@@ -109,7 +132,7 @@ function buildBoard(size) {
         // tile.setAttribute('src', '"../img/vicky-zwelling-pottery.JPG"');
         tile.id = `tile${tileObj.idx}`;
         // tile.innerHTML = `${i}`;
-        tile.innerHTML = `<img id="${i}" src="img/vicky-zwelling-pottery.JPG" height="600" width="600"></img>`;
+        tile.innerHTML = `<img id="${i}" src="${imgSrc}" height="600" width="600"></img>`;
         // tile.setAttribute('style', 'margin-left:-100px;');
         // img.setAttribute('style', 'left-margin: calc(-150px);');
         tile.style.overflow = 'hidden';
@@ -124,6 +147,7 @@ function buildBoard(size) {
         puzzleBoard.appendChild(tile);
         boardPos.push(tileObj);
     }
+    console.log(boardPos);
 }
 
 function find(location) {
