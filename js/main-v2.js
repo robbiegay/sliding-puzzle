@@ -57,11 +57,15 @@ function loadPuzzle() {
     container.appendChild(row);
     app.appendChild(container);
 
-    document.getElementById('3').setAttribute('class', 'col-3 bg-dark display-1 border');
-    document.getElementById('3').innerHTML = 'X';
+    // document.getElementById('3').setAttribute('class', 'bg-dark display-1 border');
+    // document.getElementById('3').innerHTML = '3';
     console.log(boardPos);
     // boardPos[0].draw();
-    addImg(0, 0, 50, 50);
+    // addImg();
+    updateImg();
+    // document.getElementById('3').innerHTML = '';
+    setDarkTile(3);
+    rand.addEventListener('click', randomize);
 }
 
 // OBJECTS
@@ -73,27 +77,19 @@ class TileObj {
         // this.img = '<img id="testImg" src="../img/vicky-zwelling-pottery.JPG"></img>';
 
     }
-    draw(x, y, w, h) {
-        let canvas = document.getElementById(this.idx)
-        canvas.width = 50;
-        canvas.height = 50;
-        let ctx = canvas.getContext("2d");
-        var image = new Image(50, 50);
-        image.src = '../img/vicky-zwelling-pottery.JPG';
-        image.onload = () => {
-            ctx.drawImage(image, x, y, w, h);
-        };
-        image.style.display = 'block';
-        image.style.margin = 0;
-        image.style.padding = 0;
-    }
+    // draw() {
+    //     <img src="../img/vicky-zwelling-pottery.JPG"></img>
+    //     overflow: hidden
+    // }
 }
 
-function addImg(x, y, w, h) {
-    for (let i = 0; i < 16; i++) {
-        boardPos[i].draw(x, y, w, h);
-    }
-}
+// function addImg() {
+//     for (let i = 0; i < 16; i++) {
+//         boardPos[i].draw();
+//         400px picture, 100px, margin -100, margin -100;
+
+//     }
+// }
 
 
 
@@ -102,10 +98,16 @@ function addImg(x, y, w, h) {
 function buildBoard(size) {
     for (let i = 0; i < size; i++) {
         let tileObj = new TileObj(50, i, i);
-        let tile = renderElement('canvas', 'col-3 display-1 bg-danger border py-2');
+        let tile = renderElement('div', 'display-1 bg-dark border'); // col-3
+        tile.style.height = '150px';
+        tile.style.width = '150px';
         // tile.setAttribute('src', '"../img/vicky-zwelling-pottery.JPG"');
-        tile.id = `${tileObj.idx}`;
+        tile.id = `tile${tileObj.idx}`;
         // tile.innerHTML = `${i}`;
+        tile.innerHTML = `<img id="${i}" src="../img/vicky-zwelling-pottery.JPG" height="600" width="600"></img>`;
+        // tile.setAttribute('style', 'margin-left:-100px;');
+        // img.setAttribute('style', 'left-margin: calc(-150px);');
+        tile.style.overflow = 'hidden';
         // tile.innerHTML = `${tileObj.img}`;
         // tile.style.backgroundImage = 'url(../img/vicky-zwelling-pottery.JPG)';
         // tile.style.backgroundSize = '400%';
@@ -113,11 +115,10 @@ function buildBoard(size) {
         //     tile.style.backgroundPosition = `${(i + j)* 25}% ${i * 25}%`
         // }
         // tile.background = "../img/vicky-zwelling-pottery.JPG";
-        tile.addEventListener('click', moveTile);
+        // tile.addEventListener('click', moveTile);
         puzzleBoard.appendChild(tile);
         boardPos.push(tileObj);
     }
-
 }
 
 function find(location) {
@@ -127,6 +128,32 @@ function find(location) {
         }
     }
 }
+
+
+function randomize() {
+    for (let i = 0; i < 500; i++) {
+        let rand = Math.floor(Math.random() * 16);
+        let clickedTile = boardPos[find(rand)].pos;
+        let emptyTile = boardPos[3].pos;
+        if ((clickedTile === emptyTile - 1 && emptyTile % 4 !== 0) ||
+            (clickedTile === emptyTile + 1 && clickedTile % 4 !== 0) ||
+            clickedTile === emptyTile - 4 ||
+            clickedTile === emptyTile + 4
+        ) {
+            boardPos[find(rand)].pos = emptyTile;
+            boardPos[3].pos = clickedTile;
+            let win = 0;
+            for (let i = 0; i < 16; i++) {
+                updateImgLive(i, boardPos[i].pos);
+                if (boardPos[i].pos === boardPos[i].idx) {
+                    win++;
+                }
+            }
+            setDarkTile(clickedTile);
+        }
+    }
+}
+
 
 function moveTile(e) {
     // console.log(find(e.target.id));
@@ -148,8 +175,10 @@ function moveTile(e) {
 
         let win = 0;
         for (let i = 0; i < 16; i++) {
-            document.getElementById(`${boardPos[i].pos}`).innerHTML = `${i}`;
-            document.getElementById(`${boardPos[i].pos}`).setAttribute('class', 'col-3 display-1 bg-danger border py-2');
+            // updateImgLive(boardPos[i].pos, i);
+            updateImgLive(i, boardPos[i].pos);
+            // document.getElementById(`${boardPos[i].pos}`).innerHTML = `${i}`;
+            // document.getElementById(`${boardPos[i].pos}`).setAttribute('class', 'col-3 display-1 bg-danger border py-2');
             if (boardPos[i].pos === boardPos[i].idx) {
                 win++;
             }
@@ -157,26 +186,58 @@ function moveTile(e) {
                 alert('win');
             }
         }
-        document.getElementById(`${clickedTile}`).setAttribute('class', 'col-3 bg-dark display-1 border');
+        setDarkTile(clickedTile);
+        // document.getElementById(`${clickedTile}`).setAttribute('class', 'col-3 bg-dark display-1 border');
     }
 }
 
 
+// function moveImg(x) {
+//     for (let i = 0; i < 16; i++) {
+//         document.getElementById(`${boardPos[i].pos}`)
+//     }
+// }
 
-function testingImageCanvas(__index__) {
-    let canvas = document.getElementById(__index__)
-    canvas.width = 50;
-    canvas.height = 50;
-    let ctx = canvas.getContext("2d");
-    var image = new Image();
-    image.src = '../img/vicky-zwelling-pottery.JPG';
+// document.getElementById('img0').setAttribute('display', 'none');
 
-    image.onload = () => {
-        ctx.drawImage(image, 500, 0, 500, 500, 0, 0, 500, 500);
-    };
-
-    let __img__ = document.createElement('img');
-    __img__.src = "../img/vicky-zwelling-pottery.JPG";
-    app.appendChild(__img__);
-
+function updateImg() {
+    let j = -1;
+    for (let i = 0; i < 16; i++) {
+        if (i % 4 === 0) {
+            j += 1;
+        }
+        let img = document.getElementById(`${i}`);
+        img.setAttribute('style', `margin-left:-${150 * (i % 4)}px;margin-top:-${150 * j}px;`);
+        img.addEventListener('click', moveTile);
+        // img.addEventListener('click', moveTile);
+    }
 }
+
+// x = move from, pos = move to
+function updateImgLive(x, pos) {
+    let j = 0;
+    if (x < 4) {
+        j = 0;
+    } else if (x < 8) {
+        j = 1;
+    } else if (x < 12) {
+        j = 2;
+    } else {
+        j = 3;
+    }
+    let img = document.getElementById(`${pos}`);
+    img.setAttribute('style', `margin-left:-${150 * (x % 4)}px;margin-top:-${150 * j}px;`);
+}
+
+function setDarkTile(x) {
+    let img = document.getElementById(`${x}`);
+    img.setAttribute('style', `opacity: 0;`);
+    // tile.innerHTML = '';
+}
+
+
+
+
+// let img0 = document.getElementById('img0');
+// img0.setAttribute('style', 'margin-left:-100px;');
+
