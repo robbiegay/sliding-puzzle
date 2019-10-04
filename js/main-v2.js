@@ -31,7 +31,7 @@ function loadPuzzle() {
     rand.innerHTML = 'RANDOMIZE';
 
     let upload = renderElement('button', 'col-6 button bg-primary');
-    upload.setAttribute('type', 'button');
+    upload.setAttribute('type', 'image');
     upload.innerHTML = 'UPLOAD';
 
     let bottom = renderElement('div', 'p-5');
@@ -66,6 +66,7 @@ function loadPuzzle() {
     // document.getElementById('3').innerHTML = '';
     setDarkTile(3);
     rand.addEventListener('click', randomize);
+    upload.addEventListener('click', upload);
 }
 
 // OBJECTS
@@ -91,7 +92,11 @@ class TileObj {
 //     }
 // }
 
+let imgFileName = '';
 
+function upload() {
+    alert('upload here');
+}
 
 
 // BUILD BOARD
@@ -183,7 +188,7 @@ function moveTile(e) {
                 win++;
             }
             if (win === 16) {
-                alert('win');
+                alert('You win!!!');
             }
         }
         setDarkTile(clickedTile);
