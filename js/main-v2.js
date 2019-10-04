@@ -65,6 +65,7 @@ function loadPuzzle() {
     updateImg();
     // document.getElementById('3').innerHTML = '';
     setDarkTile(3);
+    rand.addEventListener('click', randomize);
 }
 
 // OBJECTS
@@ -127,6 +128,32 @@ function find(location) {
         }
     }
 }
+
+
+function randomize() {
+    for (let i = 0; i < 500; i++) {
+        let rand = Math.floor(Math.random() * 16);
+        let clickedTile = boardPos[find(rand)].pos;
+        let emptyTile = boardPos[3].pos;
+        if ((clickedTile === emptyTile - 1 && emptyTile % 4 !== 0) ||
+            (clickedTile === emptyTile + 1 && clickedTile % 4 !== 0) ||
+            clickedTile === emptyTile - 4 ||
+            clickedTile === emptyTile + 4
+        ) {
+            boardPos[find(rand)].pos = emptyTile;
+            boardPos[3].pos = clickedTile;
+            let win = 0;
+            for (let i = 0; i < 16; i++) {
+                updateImgLive(i, boardPos[i].pos);
+                if (boardPos[i].pos === boardPos[i].idx) {
+                    win++;
+                }
+            }
+            setDarkTile(clickedTile);
+        }
+    }
+}
+
 
 function moveTile(e) {
     // console.log(find(e.target.id));
@@ -213,3 +240,4 @@ function setDarkTile(x) {
 
 // let img0 = document.getElementById('img0');
 // img0.setAttribute('style', 'margin-left:-100px;');
+
