@@ -4,15 +4,15 @@ A 4x4 sliding puzzle game!
 
 ## Getting Started
 
-###Winning the game:
+### Winning the game:
 Use the mouse to move the tile pieces around the board. Click on any square adjacent 
 to the "gray tile" to switch places with it. Repeat until you have put the puzzle in order. 
 The gray tile will end in the top-right corner.
 
-###Scrambling the puzzle:
+### Scrambling the puzzle:
 You can scramble the puzzle manually by clicking tiles at random, or you can press the "scramble" button below the puzzle.
 
-###Uploading an image:
+### Uploading an image:
 Use the "choose file" button to upload your own image. Once your image has been uploaded, click "set img". You can then follow 
 the above instruction for scrambling the board.
 
