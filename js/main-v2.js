@@ -168,9 +168,6 @@ function clickTile(e) {
     document.getElementById('titleText').innerHTML = 'Sliding Puzzle';
     let clickedTile = tileObjectArray[find(e.target.id)].pos;
     let emptyTile = tileObjectArray[emptyTilePos].pos;
-
-
-
     if ((clickedTile === emptyTile - 1 && emptyTile % 4 !== 0) ||
         (clickedTile === emptyTile + 1 && clickedTile % 4 !== 0) ||
         clickedTile === emptyTile - 4 ||
