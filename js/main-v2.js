@@ -2,13 +2,13 @@
 
 // GLOBAL VARIABLES
 let app = document.getElementById('app');
-let puzzleBoard = renderElement('div', 'row m-0')
-let boardPos = [];
+let puzzleBoard = createElementAndClass('div', 'row m-0')
+let tileObjectArray = [];
 let winCond = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
 let imgSrc = 'img/vicky-zwelling-pottery.JPG';
 
-// Function to render elements
-function renderElement(element, classes) {
+// Function to create elements and add classes
+function createElementAndClass(element, classes) {
     let output = document.createElement(element);
     output.className = classes;
     return output;
@@ -16,35 +16,35 @@ function renderElement(element, classes) {
 
 function loadPuzzle() {
     // Create Elements
-    let container = renderElement('div', 'container');
-    let row = renderElement('div', 'row');
+    let container = createElementAndClass('div', 'container');
+    let row = createElementAndClass('div', 'row');
 
-    let leftCol = renderElement('div', 'col');
-    let centerCol = renderElement('div', 'text-center');
+    let leftCol = createElementAndClass('div', 'col');
+    let centerCol = createElementAndClass('div', 'text-center');
     centerCol.setAttribute('style', 'width: 600px; min-width: 600px;');
-    let rightCol = renderElement('div', 'col');
+    let rightCol = createElementAndClass('div', 'col');
 
     // Title
-    let title = renderElement('h1', 'my-5 display-4 text-white');
+    let title = createElementAndClass('h1', 'my-5 display-4 text-white');
     title.setAttribute('id', 'titleText');
     title.innerHTML = 'Sliding Puzzle';
 
-    let rand = renderElement('button', 'col-4 button bg-primary');
+    let rand = createElementAndClass('button', 'col-4 button bg-primary');
     rand.setAttribute('type', 'button');
     rand.setAttribute('id', 'randID');
     rand.innerHTML = 'RANDOMIZE';
 
-    let upload = renderElement('input', 'col-4 button bg-light');
+    let upload = createElementAndClass('input', 'col-4 button bg-light');
     upload.setAttribute('type', 'file');
     upload.setAttribute('id', 'file');
     upload.innerHTML = 'UPLOAD';
 
-    let setImg = renderElement('button', 'col-4 button bg-primary');
+    let setImg = createElementAndClass('button', 'col-4 button bg-primary');
     setImg.setAttribute('type', 'button');
     setImg.setAttribute('id', 'setImgID');
     setImg.innerHTML = 'SET IMG';
 
-    let bottom = renderElement('div', 'p-5');
+    let bottom = createElementAndClass('div', 'p-5');
 
     // Append Elements
     centerCol.appendChild(title);
@@ -67,8 +67,8 @@ function loadPuzzle() {
     container.appendChild(row);
     app.appendChild(container);
 
-    console.log(boardPos);
-    updateImg();
+    // console.log(tileObjectArray);
+    sliceImg();
     setDarkTile(3);
     rand.addEventListener('click', randomize);
     setImg.addEventListener('click', uploadImg);
@@ -76,8 +76,7 @@ function loadPuzzle() {
 
 // OBJECTS
 class TileObj {
-    constructor(size, idx, pos) {
-        this.size = size;
+    constructor(idx, pos) {
         this.idx = idx;
         this.pos = pos;
     }
@@ -86,14 +85,19 @@ class TileObj {
 // ADD IMG
 function uploadImg() {
     let input = document.getElementById('file');
-    console.log(input.files);
+    // console.log(input.files);
+    // Checks to make sure that a file has been uploaded
     if (input.files[0].name !== undefined) {
         imgSrc = URL.createObjectURL(input.files[0]);
+        // Clears puzzle board
         puzzleBoard.innerHTML = '';
-        boardPos = [];
+        // Clears tile objects array
+        tileObjectArray = [];
+        // Rebuilds board, updates image slices, adds dark tile
         buildBoard(16);
-        updateImg();
+        sliceImg();
         setDarkTile(3);
+        // Adds event listeners
         document.getElementById('randID').addEventListener('click', randomize);
         document.getElementById('setImgID').addEventListener('click', uploadImg);
     }
@@ -103,45 +107,74 @@ function uploadImg() {
 // BUILD BOARD
 function buildBoard(size) {
     for (let i = 0; i < size; i++) {
-        let tileObj = new TileObj(50, i, i);
-        let tile = renderElement('div', 'display-1 bg-dark border');
+        let tileObj = new TileObj(i, i);
+        let tile = createElementAndClass('div', 'display-1 bg-dark border');
+        // Sets width and height of each tile
         tile.style.height = '150px';
         tile.style.width = '150px';
         tile.id = `tile${tileObj.idx}`;
+        // Puts the full size image inside each tile
         tile.innerHTML = `<img id="${i}" src="${imgSrc}" height="600px" width="600px"></img>`;
+        // Crops any part of the image outside of the 150px by 150px tile
         tile.style.overflow = 'hidden';
         puzzleBoard.appendChild(tile);
-        boardPos.push(tileObj);
+        tileObjectArray.push(tileObj);
     }
-    console.log(boardPos);
+    // console.log(tileObjectArray);
 }
 
+// Takes the id of the div that you clicked on, loops through
+// the tile objects until you find the object that has the property of 
+// the "location" position. Ex. You click on tile 1. It has a div id of 1.
+// The number displayed on the tile, however, is 7. So you loop until you get to the "7"
+// tile, because the 7 tile has a pos of 1.
 function find(location) {
     for (let i = 0; i < 16; i++) {
-        if (boardPos[i].pos === Number(location)) {
+        if (tileObjectArray[i].pos === Number(location)) {
             return i;
         }
     }
 }
 
 // RANDOMIZE BUTTON
+// Randomizes the board by simulating 500 random clicks on the board
 function randomize() {
     for (let i = 0; i < 500; i++) {
         let rand = Math.floor(Math.random() * 16);
-        let clickedTile = boardPos[find(rand)].pos;
-        let emptyTile = boardPos[3].pos;
+        let clickedTile = tileObjectArray[find(rand)].pos;
+        let emptyTile = tileObjectArray[3].pos;
         if ((clickedTile === emptyTile - 1 && emptyTile % 4 !== 0) ||
             (clickedTile === emptyTile + 1 && clickedTile % 4 !== 0) ||
             clickedTile === emptyTile - 4 ||
             clickedTile === emptyTile + 4
         ) {
-            boardPos[find(rand)].pos = emptyTile;
-            boardPos[3].pos = clickedTile;
+            tileObjectArray[find(rand)].pos = emptyTile;
+            tileObjectArray[3].pos = clickedTile;
             for (let i = 0; i < 16; i++) {
-                updateImgLive(i, boardPos[i].pos);
+                sliceImgLive(i, tileObjectArray[i].pos);
             }
             setDarkTile(clickedTile);
         }
+    }
+}
+
+// MOVES TILES ON CLICK
+function clickTile(e) {
+    // Resets the title text (incase text was set to "you win")
+    document.getElementById('titleText').innerHTML = 'Sliding Puzzle';
+    let clickedTile = tileObjectArray[find(e.target.id)].pos;
+    let emptyTile = tileObjectArray[3].pos;
+    if ((clickedTile === emptyTile - 1 && emptyTile % 4 !== 0) ||
+        (clickedTile === emptyTile + 1 && clickedTile % 4 !== 0) ||
+        clickedTile === emptyTile - 4 ||
+        clickedTile === emptyTile + 4
+    ) {
+        // Moves the clicked tile
+        tileObjectArray[find(e.target.id)].pos = emptyTile;
+        // Moves 'X'
+        tileObjectArray[3].pos = clickedTile;
+        // Checks win condition and places empty tile
+        buildAndWin(clickedTile);
     }
 }
 
@@ -149,42 +182,44 @@ function randomize() {
 document.addEventListener('keydown', keyMove);
 
 function keyMove(e) {
+    // Resets title text
     document.getElementById('titleText').innerHTML = 'Sliding Puzzle';
-    let emptyTile = boardPos[3].pos;
-    let leftOfEmpty = boardPos[3].pos - 1;
-    let rightOfEmpty = boardPos[3].pos + 1;
-    let topOfEmpty = boardPos[3].pos - 4;
-    let bottomOfEmpty = boardPos[3].pos + 4;
+    // Variables for the empty tile and its 4 adjacent squares
+    let emptyTile = tileObjectArray[3].pos;
+    let leftOfEmpty = tileObjectArray[3].pos - 1;
+    let rightOfEmpty = tileObjectArray[3].pos + 1;
+    let topOfEmpty = tileObjectArray[3].pos - 4;
+    let bottomOfEmpty = tileObjectArray[3].pos + 4;
     // Right Arrow
     if (e.keyCode === 37 && emptyTile % 4 !== 0) {
         // Moves the clicked tile
-        boardPos[find(leftOfEmpty)].pos = emptyTile;
+        tileObjectArray[find(leftOfEmpty)].pos = emptyTile;
         // Moves 'X'
-        boardPos[3].pos = leftOfEmpty;
+        tileObjectArray[3].pos = leftOfEmpty;
         buildAndWin(leftOfEmpty);
     }
     // Left Arrow
     if (e.keyCode === 39 && (emptyTile + 1) % 4 !== 0) {
         // Moves the clicked tile
-        boardPos[find(rightOfEmpty)].pos = emptyTile;
+        tileObjectArray[find(rightOfEmpty)].pos = emptyTile;
         // Moves 'X'
-        boardPos[3].pos = rightOfEmpty;
+        tileObjectArray[3].pos = rightOfEmpty;
         buildAndWin(rightOfEmpty);
     }
     // Top Arrow
     if (e.keyCode === 40 && emptyTile < 12) {
         // Moves the clicked tile
-        boardPos[find(bottomOfEmpty)].pos = emptyTile;
+        tileObjectArray[find(bottomOfEmpty)].pos = emptyTile;
         // Moves 'X'
-        boardPos[3].pos = bottomOfEmpty;
+        tileObjectArray[3].pos = bottomOfEmpty;
         buildAndWin(bottomOfEmpty);
     }
     // Bottom Arrow
     if (e.keyCode === 38 && emptyTile > 3) {
         // Moves the clicked tile
-        boardPos[find(topOfEmpty)].pos = emptyTile;
+        tileObjectArray[find(topOfEmpty)].pos = emptyTile;
         // Moves 'X'
-        boardPos[3].pos = topOfEmpty;
+        tileObjectArray[3].pos = topOfEmpty;
         buildAndWin(topOfEmpty);
     }
 }
@@ -194,11 +229,12 @@ function buildAndWin(emptyDestination) {
     // Checks win condition
     let win = 0;
     for (let i = 0; i < 16; i++) {
-        updateImgLive(i, boardPos[i].pos);
-        if (boardPos[i].pos === boardPos[i].idx) {
+        sliceImgLive(i, tileObjectArray[i].pos);
+        if (tileObjectArray[i].pos === tileObjectArray[i].idx) {
             win++;
         }
         if (win === 16) {
+            // Adds colorful win text
             document.getElementById('titleText').innerHTML = `<span class="text-danger">Y</span><span class="text-primary">O</span><span class="text-warning">U</span> <span class="text-primary">W</span><span class="text-danger">I</span><span class="text-warning">N</span><span class="text-danger">!</span><span class="text-primary">!</span><span class="text-warning">!</span>`;
         }
     }
@@ -206,27 +242,8 @@ function buildAndWin(emptyDestination) {
     setDarkTile(emptyDestination);
 }
 
-// MOVES TILES ON CLICK
-function moveTile(e) {
-    document.getElementById('titleText').innerHTML = 'Sliding Puzzle';
-    let clickedTile = boardPos[find(e.target.id)].pos;
-    let emptyTile = boardPos[3].pos;
-    if ((clickedTile === emptyTile - 1 && emptyTile % 4 !== 0) ||
-        (clickedTile === emptyTile + 1 && clickedTile % 4 !== 0) ||
-        clickedTile === emptyTile - 4 ||
-        clickedTile === emptyTile + 4
-    ) {
-        // Moves the clicked tile
-        boardPos[find(e.target.id)].pos = emptyTile;
-        // Moves 'X'
-        boardPos[3].pos = clickedTile;
-        // Checks win condition and places empty tile
-        buildAndWin(clickedTile);
-    }
-}
-
 // SLICES IMG
-function updateImg() {
+function sliceImg() {
     let j = -1;
     for (let i = 0; i < 16; i++) {
         if (i % 4 === 0) {
@@ -234,12 +251,12 @@ function updateImg() {
         }
         let img = document.getElementById(`${i}`);
         img.setAttribute('style', `margin-left:-${150 * (i % 4)}px;margin-top:-${150 * j}px;`);
-        img.addEventListener('click', moveTile);
+        img.addEventListener('click', clickTile);
     }
 }
 
 // x = move from, pos = move to
-function updateImgLive(x, pos) {
+function sliceImgLive(x, pos) {
     let j = 0;
     if (x < 4) {
         j = 0;
