@@ -16,13 +16,8 @@ function renderElement(element, classes) {
 
 function loadPuzzle() {
     // Create Elements
-    let container = renderElement('div', 'container'); // changed from 'fluid'
+    let container = renderElement('div', 'container');
     let row = renderElement('div', 'row');
-    // row.setAttribute('style', 'width: 600px');
-
-    // let leftCol = renderElement('div', 'col-0 col-sm-0 col-md-1 col-lg-2 col-xl-2.5');
-    // let centerCol = renderElement('div', 'col-12 col-sm-12 col-md-10 col-lg-8 col-xl-7 text-center');
-    // let rightCol = renderElement('div', 'col-0 col-sm-0 col-md-1 col-lg-2 col-xl-2.5');
 
     let leftCol = renderElement('div', 'col');
     let centerCol = renderElement('div', 'text-center');
@@ -108,7 +103,7 @@ function uploadImg() {
 function buildBoard(size) {
     for (let i = 0; i < size; i++) {
         let tileObj = new TileObj(50, i, i);
-        let tile = renderElement('div', 'display-1 bg-dark border'); // col-3
+        let tile = renderElement('div', 'display-1 bg-dark border');
         tile.style.height = '150px';
         tile.style.width = '150px';
         tile.id = `tile${tileObj.idx}`;
@@ -158,7 +153,7 @@ function keyMove(e) {
     let topOfEmpty = boardPos[3].pos - 4;
     let bottomOfEmpty = boardPos[3].pos + 4;
     // Right Arrow
-    if (e.keyCode === 39 && emptyTile % 4 !== 0) {
+    if (e.keyCode === 37 && emptyTile % 4 !== 0) {
         // Moves the clicked tile
         boardPos[find(leftOfEmpty)].pos = emptyTile;
         // Moves 'X'
@@ -166,7 +161,7 @@ function keyMove(e) {
         buildAndWin(leftOfEmpty);
     }
     // Left Arrow
-    if (e.keyCode === 37 && (emptyTile + 1) % 4 !== 0) {
+    if (e.keyCode === 39 && (emptyTile + 1) % 4 !== 0) {
         // Moves the clicked tile
         boardPos[find(rightOfEmpty)].pos = emptyTile;
         // Moves 'X'
@@ -174,7 +169,7 @@ function keyMove(e) {
         buildAndWin(rightOfEmpty);
     }
     // Top Arrow
-    if (e.keyCode === 38 && emptyTile < 12) {
+    if (e.keyCode === 40 && emptyTile < 12) {
         // Moves the clicked tile
         boardPos[find(bottomOfEmpty)].pos = emptyTile;
         // Moves 'X'
@@ -182,7 +177,7 @@ function keyMove(e) {
         buildAndWin(bottomOfEmpty);
     }
     // Bottom Arrow
-    if (e.keyCode === 40 && emptyTile > 3) {
+    if (e.keyCode === 38 && emptyTile > 3) {
         // Moves the clicked tile
         boardPos[find(topOfEmpty)].pos = emptyTile;
         // Moves 'X'
@@ -201,6 +196,8 @@ function buildAndWin(emptyDestination) {
         }
         if (win === 16) {
             alert('You win!!!');
+            // PUT THE WIN MESSAGE AT TOP
+            document.getElementById('bottom').innerHTML = '<p>You Win!!<p>';
         }
     }
     // Adds the dark tile
