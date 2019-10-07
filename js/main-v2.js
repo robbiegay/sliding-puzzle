@@ -2,7 +2,7 @@
 
 // GLOBAL VARIABLES
 let app = document.getElementById('app');
-let puzzleBoard = renderElement('div', 'row')
+let puzzleBoard = renderElement('div', 'row m-0')
 let boardPos = [];
 let winCond = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
 let imgSrc = 'img/vicky-zwelling-pottery.JPG';
@@ -18,10 +18,16 @@ function loadPuzzle() {
     // Create Elements
     let container = renderElement('div', 'container'); // fluid
     let row = renderElement('div', 'row');
+    // row.setAttribute('style', 'width: 600px');
 
-    let leftCol = renderElement('div', 'col-0 col-sm-0 col-md-1 col-lg-2');
-    let centerCol = renderElement('div', 'col-12 col-sm-12 col-md-10 col-lg-8 text-center');
-    let rightCol = renderElement('div', 'col-0 col-sm-0 col-md-1 col-lg-2');
+    // let leftCol = renderElement('div', 'col-0 col-sm-0 col-md-1 col-lg-2 col-xl-2.5');
+    // let centerCol = renderElement('div', 'col-12 col-sm-12 col-md-10 col-lg-8 col-xl-7 text-center');
+    // let rightCol = renderElement('div', 'col-0 col-sm-0 col-md-1 col-lg-2 col-xl-2.5');
+
+    let leftCol = renderElement('div', 'col');
+    let centerCol = renderElement('div', 'text-center');
+    centerCol.setAttribute('style', 'width: 600px; min-width: 600px;');
+    let rightCol = renderElement('div', 'col');
 
     // Title
     let title = renderElement('h1', 'my-5 display-4 text-white');
@@ -50,7 +56,6 @@ function loadPuzzle() {
     // Add tiles to the puzzleBoard
     buildBoard(16);
 
-
     centerCol.appendChild(puzzleBoard);
 
     centerCol.appendChild(rand);
@@ -66,17 +71,11 @@ function loadPuzzle() {
     container.appendChild(row);
     app.appendChild(container);
 
-    // document.getElementById('3').setAttribute('class', 'bg-dark display-1 border');
-    // document.getElementById('3').innerHTML = '3';
     console.log(boardPos);
-    // boardPos[0].draw();
-    // addImg();
     updateImg();
-    // document.getElementById('3').innerHTML = '';
     setDarkTile(3);
     rand.addEventListener('click', randomize);
     setImg.addEventListener('click', uploadImg);
-    // upload.addEventListener('click', upload);
 }
 
 // OBJECTS
@@ -85,32 +84,15 @@ class TileObj {
         this.size = size;
         this.idx = idx;
         this.pos = pos;
-        // this.img = '<img id="testImg" src="../img/vicky-zwelling-pottery.JPG"></img>';
-
     }
-    // draw() {
-    //     <img src="../img/vicky-zwelling-pottery.JPG"></img>
-    //     overflow: hidden
-    // }
 }
-
-// function addImg() {
-//     for (let i = 0; i < 16; i++) {
-//         boardPos[i].draw();
-//         400px picture, 100px, margin -100, margin -100;
-
-//     }
-// }
 
 // ADD IMG
 function uploadImg() {
-    // alert('hi');
     let input = document.getElementById('file');
-    // console.log(input.files[0].name);
     console.log(input.files);
     if (input.files[0].name !== undefined) {
         imgSrc = URL.createObjectURL(input.files[0]);
-        // imgSrc = input.files[0].name;
         puzzleBoard.innerHTML = '';
         boardPos = [];
         buildBoard(16);
@@ -129,21 +111,9 @@ function buildBoard(size) {
         let tile = renderElement('div', 'display-1 bg-dark border'); // col-3
         tile.style.height = '150px';
         tile.style.width = '150px';
-        // tile.setAttribute('src', '"../img/vicky-zwelling-pottery.JPG"');
         tile.id = `tile${tileObj.idx}`;
-        // tile.innerHTML = `${i}`;
-        tile.innerHTML = `<img id="${i}" src="${imgSrc}" height="600" width="600"></img>`;
-        // tile.setAttribute('style', 'margin-left:-100px;');
-        // img.setAttribute('style', 'left-margin: calc(-150px);');
+        tile.innerHTML = `<img id="${i}" src="${imgSrc}" height="600px" width="600px"></img>`;
         tile.style.overflow = 'hidden';
-        // tile.innerHTML = `${tileObj.img}`;
-        // tile.style.backgroundImage = 'url(../img/vicky-zwelling-pottery.JPG)';
-        // tile.style.backgroundSize = '400%';
-        // for (let j = 0; j < 4; j++) {
-        //     tile.style.backgroundPosition = `${(i + j)* 25}% ${i * 25}%`
-        // }
-        // tile.background = "../img/vicky-zwelling-pottery.JPG";
-        // tile.addEventListener('click', moveTile);
         puzzleBoard.appendChild(tile);
         boardPos.push(tileObj);
     }
@@ -185,13 +155,8 @@ function randomize() {
 
 
 function moveTile(e) {
-    // console.log(find(e.target.id));
     let clickedTile = boardPos[find(e.target.id)].pos;
-    // let tileNumIdx = boardPos[e.target.id].idx;
     let emptyTile = boardPos[3].pos;
-    // console.log(`Clicked Tile Name: ${boardPos[e.target.id].idx} Pos: ${boardPos[e.target.id].pos}`);
-    // console.log(`Empty Tile Name: ${boardPos[3].idx} Pos: ${boardPos[3].pos}`);
-    // Checks if the clicked tile is next to the empty tile
     if ((clickedTile === emptyTile - 1 && emptyTile % 4 !== 0) ||
         (clickedTile === emptyTile + 1 && clickedTile % 4 !== 0) ||
         clickedTile === emptyTile - 4 ||
@@ -204,10 +169,7 @@ function moveTile(e) {
 
         let win = 0;
         for (let i = 0; i < 16; i++) {
-            // updateImgLive(boardPos[i].pos, i);
             updateImgLive(i, boardPos[i].pos);
-            // document.getElementById(`${boardPos[i].pos}`).innerHTML = `${i}`;
-            // document.getElementById(`${boardPos[i].pos}`).setAttribute('class', 'col-3 display-1 bg-danger border py-2');
             if (boardPos[i].pos === boardPos[i].idx) {
                 win++;
             }
@@ -216,18 +178,8 @@ function moveTile(e) {
             }
         }
         setDarkTile(clickedTile);
-        // document.getElementById(`${clickedTile}`).setAttribute('class', 'col-3 bg-dark display-1 border');
     }
 }
-
-
-// function moveImg(x) {
-//     for (let i = 0; i < 16; i++) {
-//         document.getElementById(`${boardPos[i].pos}`)
-//     }
-// }
-
-// document.getElementById('img0').setAttribute('display', 'none');
 
 function updateImg() {
     let j = -1;
@@ -238,7 +190,6 @@ function updateImg() {
         let img = document.getElementById(`${i}`);
         img.setAttribute('style', `margin-left:-${150 * (i % 4)}px;margin-top:-${150 * j}px;`);
         img.addEventListener('click', moveTile);
-        // img.addEventListener('click', moveTile);
     }
 }
 
@@ -261,12 +212,4 @@ function updateImgLive(x, pos) {
 function setDarkTile(x) {
     let img = document.getElementById(`${x}`);
     img.setAttribute('style', `opacity: 0;`);
-    // tile.innerHTML = '';
 }
-
-
-
-
-// let img0 = document.getElementById('img0');
-// img0.setAttribute('style', 'margin-left:-100px;');
-
