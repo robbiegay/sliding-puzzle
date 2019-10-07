@@ -5,8 +5,8 @@ A 4x4 sliding puzzle game!
 ## Getting Started
 
 ### Winning the game:
-Use the mouse to move the tile pieces around the board. Click on any square adjacent 
-to the "gray tile" to switch places with it. Repeat until you have put the puzzle in order. 
+Use the mouse or arrow keys to move the tile pieces around the board. Click on any square adjacent 
+to the "gray tile" to switch places with it. Pressing an arrow key will move the tile in the direction of the inputted arrow (ex. Left arrow will attempt to move the gray tile to the left). Repeat until you have put the puzzle in order. 
 The gray tile will end in the top-right corner.
 
 ### Scrambling the puzzle:
