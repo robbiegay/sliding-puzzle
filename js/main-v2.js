@@ -16,7 +16,7 @@ function renderElement(element, classes) {
 
 function loadPuzzle() {
     // Create Elements
-    let container = renderElement('div', 'container'); // fluid
+    let container = renderElement('div', 'container'); // changed from 'fluid'
     let row = renderElement('div', 'row');
     // row.setAttribute('style', 'width: 600px');
 
@@ -141,18 +141,71 @@ function randomize() {
         ) {
             boardPos[find(rand)].pos = emptyTile;
             boardPos[3].pos = clickedTile;
-            let win = 0;
             for (let i = 0; i < 16; i++) {
                 updateImgLive(i, boardPos[i].pos);
-                if (boardPos[i].pos === boardPos[i].idx) {
-                    win++;
-                }
             }
             setDarkTile(clickedTile);
         }
     }
 }
 
+document.addEventListener('keydown', keyMove);
+
+function keyMove(e) {
+    let emptyTile = boardPos[3].pos;
+    let leftOfEmpty = boardPos[3].pos - 1;
+    let rightOfEmpty = boardPos[3].pos + 1;
+    let topOfEmpty = boardPos[3].pos - 4;
+    let bottomOfEmpty = boardPos[3].pos + 4;
+    // Right Arrow
+    if (e.keyCode === 39 && emptyTile % 4 !== 0) {
+        // Moves the clicked tile
+        boardPos[find(leftOfEmpty)].pos = emptyTile;
+        // Moves 'X'
+        boardPos[3].pos = leftOfEmpty;
+        buildAndWin(leftOfEmpty);
+    }
+    // Left Arrow
+    if (e.keyCode === 37 && (emptyTile + 1) % 4 !== 0) {
+        // Moves the clicked tile
+        boardPos[find(rightOfEmpty)].pos = emptyTile;
+        // Moves 'X'
+        boardPos[3].pos = rightOfEmpty;
+        buildAndWin(rightOfEmpty);
+    }
+    // Top Arrow
+    if (e.keyCode === 38 && emptyTile < 12) {
+        // Moves the clicked tile
+        boardPos[find(bottomOfEmpty)].pos = emptyTile;
+        // Moves 'X'
+        boardPos[3].pos = bottomOfEmpty;
+        buildAndWin(bottomOfEmpty);
+    }
+    // Bottom Arrow
+    if (e.keyCode === 40 && emptyTile > 3) {
+        // Moves the clicked tile
+        boardPos[find(topOfEmpty)].pos = emptyTile;
+        // Moves 'X'
+        boardPos[3].pos = topOfEmpty;
+        buildAndWin(topOfEmpty);
+    }
+}
+
+function buildAndWin(emptyDestination) {
+    // Checks win condition
+    let win = 0;
+    for (let i = 0; i < 16; i++) {
+        updateImgLive(i, boardPos[i].pos);
+        if (boardPos[i].pos === boardPos[i].idx) {
+            win++;
+        }
+        if (win === 16) {
+            alert('You win!!!');
+        }
+    }
+    // Adds the dark tile
+    setDarkTile(emptyDestination);
+}
 
 function moveTile(e) {
     let clickedTile = boardPos[find(e.target.id)].pos;
@@ -167,17 +220,8 @@ function moveTile(e) {
         // Moves 'X'
         boardPos[3].pos = clickedTile;
 
-        let win = 0;
-        for (let i = 0; i < 16; i++) {
-            updateImgLive(i, boardPos[i].pos);
-            if (boardPos[i].pos === boardPos[i].idx) {
-                win++;
-            }
-            if (win === 16) {
-                alert('You win!!!');
-            }
-        }
-        setDarkTile(clickedTile);
+        // Checks win condition and places empty tile
+        buildAndWin(clickedTile);
     }
 }
 
