@@ -4,8 +4,17 @@
 let app = document.getElementById('app');
 let puzzleBoard = createElementAndClass('div', 'row m-0')
 let tileObjectArray = [];
-let winCond = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
 let imgSrc = 'img/vicky-zwelling-pottery.JPG';
+let boardSize = 16;
+let emptyTilePos = 3;
+
+// OBJECTS
+class TileObj {
+    constructor(idx, pos) {
+        this.idx = idx;
+        this.pos = pos;
+    }
+}
 
 // Function to create elements and add classes
 function createElementAndClass(element, classes) {
@@ -50,7 +59,7 @@ function loadPuzzle() {
     centerCol.appendChild(title);
 
     // Add tiles to the puzzleBoard
-    buildBoard(16);
+    buildBoard(boardSize);
 
     centerCol.appendChild(puzzleBoard);
 
@@ -69,18 +78,11 @@ function loadPuzzle() {
 
     // console.log(tileObjectArray);
     sliceImg();
-    setDarkTile(3);
+    setDarkTile(emptyTilePos);
     rand.addEventListener('click', randomize);
     setImg.addEventListener('click', uploadImg);
 }
 
-// OBJECTS
-class TileObj {
-    constructor(idx, pos) {
-        this.idx = idx;
-        this.pos = pos;
-    }
-}
 
 // ADD IMG
 function uploadImg() {
@@ -94,9 +96,9 @@ function uploadImg() {
         // Clears tile objects array
         tileObjectArray = [];
         // Rebuilds board, updates image slices, adds dark tile
-        buildBoard(16);
+        buildBoard(boardSize);
         sliceImg();
-        setDarkTile(3);
+        setDarkTile(emptyTilePos);
         // Adds event listeners
         document.getElementById('randID').addEventListener('click', randomize);
         document.getElementById('setImgID').addEventListener('click', uploadImg);
@@ -123,13 +125,15 @@ function buildBoard(size) {
     // console.log(tileObjectArray);
 }
 
-// Takes the id of the div that you clicked on, loops through
-// the tile objects until you find the object that has the property of 
-// the "location" position. Ex. You click on tile 1. It has a div id of 1.
-// The number displayed on the tile, however, is 7. So you loop until you get to the "7"
-// tile, because the 7 tile has a pos of 1.
+/*
+    Takes the id of the div that you clicked on, loops through
+    the tile objects until you find the object that has the property of 
+    the "location" position. Ex. You click on tile 1. It has a div id of 1.
+    The number displayed on the tile, however, is 7. So you loop until you get to the "7"
+    tile, because the 7 tile has a pos of 1.
+*/
 function find(location) {
-    for (let i = 0; i < 16; i++) {
+    for (let i = 0; i < boardSize; i++) {
         if (tileObjectArray[i].pos === Number(location)) {
             return i;
         }
@@ -140,17 +144,17 @@ function find(location) {
 // Randomizes the board by simulating 500 random clicks on the board
 function randomize() {
     for (let i = 0; i < 500; i++) {
-        let rand = Math.floor(Math.random() * 16);
+        let rand = Math.floor(Math.random() * boardSize);
         let clickedTile = tileObjectArray[find(rand)].pos;
-        let emptyTile = tileObjectArray[3].pos;
+        let emptyTile = tileObjectArray[emptyTilePos].pos;
         if ((clickedTile === emptyTile - 1 && emptyTile % 4 !== 0) ||
             (clickedTile === emptyTile + 1 && clickedTile % 4 !== 0) ||
             clickedTile === emptyTile - 4 ||
             clickedTile === emptyTile + 4
         ) {
             tileObjectArray[find(rand)].pos = emptyTile;
-            tileObjectArray[3].pos = clickedTile;
-            for (let i = 0; i < 16; i++) {
+            tileObjectArray[emptyTilePos].pos = clickedTile;
+            for (let i = 0; i < boardSize; i++) {
                 sliceImgLive(i, tileObjectArray[i].pos);
             }
             setDarkTile(clickedTile);
@@ -163,7 +167,10 @@ function clickTile(e) {
     // Resets the title text (incase text was set to "you win")
     document.getElementById('titleText').innerHTML = 'Sliding Puzzle';
     let clickedTile = tileObjectArray[find(e.target.id)].pos;
-    let emptyTile = tileObjectArray[3].pos;
+    let emptyTile = tileObjectArray[emptyTilePos].pos;
+
+
+
     if ((clickedTile === emptyTile - 1 && emptyTile % 4 !== 0) ||
         (clickedTile === emptyTile + 1 && clickedTile % 4 !== 0) ||
         clickedTile === emptyTile - 4 ||
@@ -172,7 +179,7 @@ function clickTile(e) {
         // Moves the clicked tile
         tileObjectArray[find(e.target.id)].pos = emptyTile;
         // Moves 'X'
-        tileObjectArray[3].pos = clickedTile;
+        tileObjectArray[emptyTilePos].pos = clickedTile;
         // Checks win condition and places empty tile
         buildAndWin(clickedTile);
     }
@@ -185,41 +192,46 @@ function keyMove(e) {
     // Resets title text
     document.getElementById('titleText').innerHTML = 'Sliding Puzzle';
     // Variables for the empty tile and its 4 adjacent squares
-    let emptyTile = tileObjectArray[3].pos;
-    let leftOfEmpty = tileObjectArray[3].pos - 1;
-    let rightOfEmpty = tileObjectArray[3].pos + 1;
-    let topOfEmpty = tileObjectArray[3].pos - 4;
-    let bottomOfEmpty = tileObjectArray[3].pos + 4;
+    let emptyTile = tileObjectArray[emptyTilePos].pos;
+    let leftOfEmpty = tileObjectArray[emptyTilePos].pos - 1;
+    let rightOfEmpty = tileObjectArray[emptyTilePos].pos + 1;
+    let topOfEmpty = tileObjectArray[emptyTilePos].pos - 4;
+    let bottomOfEmpty = tileObjectArray[emptyTilePos].pos + 4;
     // Right Arrow
     if (e.keyCode === 37 && emptyTile % 4 !== 0) {
+        // Prevents the arrow keys from moving the screen position
+        event.preventDefault();
         // Moves the clicked tile
         tileObjectArray[find(leftOfEmpty)].pos = emptyTile;
         // Moves 'X'
-        tileObjectArray[3].pos = leftOfEmpty;
+        tileObjectArray[emptyTilePos].pos = leftOfEmpty;
         buildAndWin(leftOfEmpty);
     }
     // Left Arrow
     if (e.keyCode === 39 && (emptyTile + 1) % 4 !== 0) {
+        event.preventDefault();
         // Moves the clicked tile
         tileObjectArray[find(rightOfEmpty)].pos = emptyTile;
         // Moves 'X'
-        tileObjectArray[3].pos = rightOfEmpty;
+        tileObjectArray[emptyTilePos].pos = rightOfEmpty;
         buildAndWin(rightOfEmpty);
     }
     // Top Arrow
     if (e.keyCode === 40 && emptyTile < 12) {
+        event.preventDefault();
         // Moves the clicked tile
         tileObjectArray[find(bottomOfEmpty)].pos = emptyTile;
         // Moves 'X'
-        tileObjectArray[3].pos = bottomOfEmpty;
+        tileObjectArray[emptyTilePos].pos = bottomOfEmpty;
         buildAndWin(bottomOfEmpty);
     }
     // Bottom Arrow
     if (e.keyCode === 38 && emptyTile > 3) {
+        event.preventDefault();
         // Moves the clicked tile
         tileObjectArray[find(topOfEmpty)].pos = emptyTile;
         // Moves 'X'
-        tileObjectArray[3].pos = topOfEmpty;
+        tileObjectArray[emptyTilePos].pos = topOfEmpty;
         buildAndWin(topOfEmpty);
     }
 }
@@ -228,12 +240,12 @@ function keyMove(e) {
 function buildAndWin(emptyDestination) {
     // Checks win condition
     let win = 0;
-    for (let i = 0; i < 16; i++) {
+    for (let i = 0; i < boardSize; i++) {
         sliceImgLive(i, tileObjectArray[i].pos);
         if (tileObjectArray[i].pos === tileObjectArray[i].idx) {
             win++;
         }
-        if (win === 16) {
+        if (win === boardSize) {
             // Adds colorful win text
             document.getElementById('titleText').innerHTML = `<span class="text-danger">Y</span><span class="text-primary">O</span><span class="text-warning">U</span> <span class="text-primary">W</span><span class="text-danger">I</span><span class="text-warning">N</span><span class="text-danger">!</span><span class="text-primary">!</span><span class="text-warning">!</span>`;
         }
@@ -245,7 +257,7 @@ function buildAndWin(emptyDestination) {
 // SLICES IMG
 function sliceImg() {
     let j = -1;
-    for (let i = 0; i < 16; i++) {
+    for (let i = 0; i < boardSize; i++) {
         if (i % 4 === 0) {
             j += 1;
         }
@@ -257,16 +269,7 @@ function sliceImg() {
 
 // x = move from, pos = move to
 function sliceImgLive(x, pos) {
-    let j = 0;
-    if (x < 4) {
-        j = 0;
-    } else if (x < 8) {
-        j = 1;
-    } else if (x < 12) {
-        j = 2;
-    } else {
-        j = 3;
-    }
+    let j = Math.floor((x / 4) % 4);
     let img = document.getElementById(`${pos}`);
     img.setAttribute('style', `margin-left:-${150 * (x % 4)}px;margin-top:-${150 * j}px;`);
 }
