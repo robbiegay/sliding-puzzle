@@ -26,6 +26,7 @@ function loadPuzzle() {
 
     // Title
     let title = renderElement('h1', 'my-5 display-4 text-white');
+    title.setAttribute('id', 'titleText');
     title.innerHTML = 'Sliding Puzzle';
 
     let rand = renderElement('button', 'col-4 button bg-primary');
@@ -123,7 +124,7 @@ function find(location) {
     }
 }
 
-
+// RANDOMIZE BUTTON
 function randomize() {
     for (let i = 0; i < 500; i++) {
         let rand = Math.floor(Math.random() * 16);
@@ -144,9 +145,11 @@ function randomize() {
     }
 }
 
+// KEYBOARD CONTROLS
 document.addEventListener('keydown', keyMove);
 
 function keyMove(e) {
+    document.getElementById('titleText').innerHTML = 'Sliding Puzzle';
     let emptyTile = boardPos[3].pos;
     let leftOfEmpty = boardPos[3].pos - 1;
     let rightOfEmpty = boardPos[3].pos + 1;
@@ -186,6 +189,7 @@ function keyMove(e) {
     }
 }
 
+// REBUILDS THE BOARD, CHECKS FOR WIN
 function buildAndWin(emptyDestination) {
     // Checks win condition
     let win = 0;
@@ -195,16 +199,16 @@ function buildAndWin(emptyDestination) {
             win++;
         }
         if (win === 16) {
-            alert('You win!!!');
-            // PUT THE WIN MESSAGE AT TOP
-            document.getElementById('bottom').innerHTML = '<p>You Win!!<p>';
+            document.getElementById('titleText').innerHTML = `<span class="text-danger">Y</span><span class="text-primary">O</span><span class="text-warning">U</span> <span class="text-primary">W</span><span class="text-danger">I</span><span class="text-warning">N</span><span class="text-danger">!</span><span class="text-primary">!</span><span class="text-warning">!</span>`;
         }
     }
     // Adds the dark tile
     setDarkTile(emptyDestination);
 }
 
+// MOVES TILES ON CLICK
 function moveTile(e) {
+    document.getElementById('titleText').innerHTML = 'Sliding Puzzle';
     let clickedTile = boardPos[find(e.target.id)].pos;
     let emptyTile = boardPos[3].pos;
     if ((clickedTile === emptyTile - 1 && emptyTile % 4 !== 0) ||
@@ -216,12 +220,12 @@ function moveTile(e) {
         boardPos[find(e.target.id)].pos = emptyTile;
         // Moves 'X'
         boardPos[3].pos = clickedTile;
-
         // Checks win condition and places empty tile
         buildAndWin(clickedTile);
     }
 }
 
+// SLICES IMG
 function updateImg() {
     let j = -1;
     for (let i = 0; i < 16; i++) {
